@@ -32,8 +32,11 @@ SUPPORTED_LANGUAGES: dict[str, str] = {
     "Hungarian": "hu",
 }
 
-# Built-in speaker used when no reference audio is supplied
-DEFAULT_SPEAKER = "Claribel Dervla"
+# Built-in speakers used when no reference audio is supplied
+DEFAULT_SPEAKERS: dict[str, str] = {
+    "Female": "Claribel Dervla",
+    "Male": "Damien Black",
+}
 # XTTS-v2 hard limit is ~400 chars; stay well below for reliable output
 MAX_CHUNK_CHARS = 220
 # Silence (ms) inserted between chunks in the final audio
@@ -100,6 +103,7 @@ def generate_speech(
     text: str,
     language: str,
     reference_audio: str | None,
+    gender: str,
     output_format: str,
     output_dir: str,
     progress_callback=None,
@@ -112,6 +116,7 @@ def generate_speech(
         text:             Full story text.
         language:         BCP-47 language code (e.g. "hi", "en").
         reference_audio:  Path to reference WAV/MP3 for voice cloning, or None.
+        gender:           "Female" or "Male" — used when reference_audio is absent.
         output_format:    "mp3" or "wav" (case-insensitive).
         output_dir:       Directory where the output file will be written.
         progress_callback: Optional callable(fraction, desc=str).
@@ -137,7 +142,7 @@ def generate_speech(
             if reference_audio and os.path.isfile(reference_audio):
                 kwargs["speaker_wav"] = reference_audio
             else:
-                kwargs["speaker"] = DEFAULT_SPEAKER
+                kwargs["speaker"] = DEFAULT_SPEAKERS.get(gender, DEFAULT_SPEAKERS["Female"])
 
             tts.tts_to_file(**kwargs)
             segments.append(AudioSegment.from_wav(chunk_path))
