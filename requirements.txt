@@ -1,0 +1,21 @@
+# Core TTS — Coqui XTTS-v2 community fork (voice cloning + Hindi, works on Python 3.13)
+coqui-tts>=0.27.0
+
+# UI
+gradio>=6.0.0
+
+# Audio processing (requires system ffmpeg for MP3 export)
+pydub>=0.25.1
+
+# Deep learning — GPU (CUDA 12.4, tested on RTX 3060 / driver 580)
+# Install with: pip install -r requirements.txt --index-url https://download.pytorch.org/whl/cu124
+# For other CUDA versions swap the index URL:
+#   CUDA 12.1 → https://download.pytorch.org/whl/cu121
+#   CUDA 11.8 → https://download.pytorch.org/whl/cu118
+#   CPU only  → https://download.pytorch.org/whl/cpu
+torch==2.6.0+cu124
+torchvision==0.21.0+cu124
+torchaudio==2.6.0+cu124
+
+# Pin transformers to 4.x — coqui-tts is incompatible with transformers 5.x
+transformers>=4.40.0,<5.0.0
